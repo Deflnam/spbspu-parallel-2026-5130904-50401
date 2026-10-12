@@ -62,8 +62,14 @@ int main(int argc, char** argv)
   double x = 0.0;
   double y = 0.0;
 
-  while (std::cin >> r >> second >> x >> y)
+  while (std::cin >> r)
   {
+    if (!(std::cin >> second >> x >> y))
+    {
+      std::cerr << "Error: cannot parse figure parameters" << '\n';
+      return bad_exit;
+    }
+
     if (r <= 0.0)
     {
       std::cerr << "Radius must be positive" << '\n';
@@ -79,12 +85,6 @@ int main(int argc, char** argv)
       const double b = (second < 0.0) ? -second : second;
       shapes.push_back(std::make_unique< burukov::Ellipse >(r, b, x, y));
     }
-  }
-
-  if (!std::cin.eof())
-  {
-    std::cerr << "Error: cannot parse figure parameters" << '\n';
-    return bad_exit;
   }
 
   if (shapes.empty())
