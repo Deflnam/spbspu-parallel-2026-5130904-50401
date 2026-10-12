@@ -2,9 +2,13 @@
 
 #include <algorithm>
 #include <cstddef>
+#include <memory>
 #include <random>
 #include <stdexcept>
+#include <string>
 #include <thread>
+#include <utility>
+#include <vector>
 
 namespace burukov
 {
