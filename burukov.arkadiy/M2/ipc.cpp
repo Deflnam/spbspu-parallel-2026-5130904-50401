@@ -54,7 +54,7 @@ void burukov::PipeEndpoint::closeFd() noexcept
 
 bool burukov::writeAll(int fd, const void * buffer, std::size_t count) noexcept
 {
-  const char * ptr = static_cast< const char * >(buffer);
+  const char * const ptr = static_cast< const char * >(buffer);
   std::size_t total = 0;
   while (total < count)
   {
@@ -78,7 +78,7 @@ bool burukov::writeAll(int fd, const void * buffer, std::size_t count) noexcept
 
 bool burukov::readAll(int fd, void * buffer, std::size_t count) noexcept
 {
-  char * ptr = static_cast< char * >(buffer);
+  char * const ptr = static_cast< char * >(buffer);
   std::size_t total = 0;
   while (total < count)
   {
@@ -110,7 +110,8 @@ bool burukov::sendTask(int fd, std::size_t calc_id, long long threads, long long
   }
   if (!shapes.empty())
   {
-    const std::size_t bytes = static_cast< std::size_t >(shapes.size()) * sizeof(shape_data_t);
+    const std::size_t shapes_count = static_cast< std::size_t >(shapes.size());
+    const std::size_t bytes = shapes_count * sizeof(shape_data_t);
     if (!writeAll(fd, shapes.data(), bytes))
     {
       return false;
