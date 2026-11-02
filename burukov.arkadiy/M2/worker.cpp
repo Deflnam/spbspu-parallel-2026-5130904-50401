@@ -4,7 +4,7 @@
 #include <cstddef>
 #include <vector>
 
-#include "shapes.hpp"
+#include "../common/shapes.hpp"
 
 #include "ipc.hpp"
 
@@ -23,7 +23,7 @@ void burukov::runWorkerLoop(int read_fd, int write_fd, long long seed)
     std::vector< shape_data_t > shapes(header.shape_count);
     if (header.shape_count > 0)
     {
-      const std::size_t bytes = header.shape_count * sizeof(shape_data_t);
+      const std::size_t bytes = static_cast< std::size_t >(header.shape_count) * sizeof(shape_data_t);
       if (!readAll(read_fd, shapes.data(), bytes))
       {
         break;

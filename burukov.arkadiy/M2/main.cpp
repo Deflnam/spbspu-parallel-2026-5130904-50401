@@ -20,11 +20,15 @@ int main(int argc, char ** argv)
   signal(SIGPIPE, SIG_IGN);
 
   burukov::CommandProcessor processor;
-  std::string line;
   int child_exit_flag = 0;
 
-  while (std::getline(std::cin, line))
+  while (true)
   {
+    std::string line;
+    if (!std::getline(std::cin, line))
+    {
+      break;
+    }
     processor.processLine(line, child_exit_flag);
     if (child_exit_flag != 0)
     {
