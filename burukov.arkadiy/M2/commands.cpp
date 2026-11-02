@@ -16,7 +16,7 @@
 #include <sys/wait.h>
 #include <unistd.h>
 
-#include "shapes.hpp"
+#include "../common/shapes.hpp"
 
 #include "ipc.hpp"
 #include "worker.hpp"

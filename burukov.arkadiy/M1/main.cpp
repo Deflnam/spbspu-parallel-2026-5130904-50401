@@ -5,7 +5,7 @@
 #include <stdexcept>
 #include <vector>
 
-#include <shapes.hpp>
+#include "../common/shapes.hpp"
 
 int main(int argc, char ** argv)
 {

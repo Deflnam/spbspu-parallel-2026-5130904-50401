@@ -4,7 +4,7 @@
 #include <cstddef>
 #include <vector>
 
-#include <shapes.hpp>
+#include "../common/shapes.hpp"
 
 namespace burukov
 {

@@ -6,7 +6,7 @@
 
 #include <unistd.h>
 
-#include "shapes.hpp"
+#include "../common/shapes.hpp"
 
 burukov::PipeEndpoint::PipeEndpoint() noexcept:
   fd_(-1)
@@ -110,7 +110,7 @@ bool burukov::sendTask(int fd, std::size_t calc_id, long long threads, long long
   }
   if (!shapes.empty())
   {
-    const std::size_t bytes = shapes.size() * sizeof(shape_data_t);
+    const std::size_t bytes = static_cast< std::size_t >(shapes.size()) * sizeof(shape_data_t);
     if (!writeAll(fd, shapes.data(), bytes))
     {
       return false;

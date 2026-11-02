@@ -10,7 +10,7 @@
 
 #include <sys/types.h>
 
-#include "shapes.hpp"
+#include "../common/shapes.hpp"
 
 #include "ipc.hpp"
 
