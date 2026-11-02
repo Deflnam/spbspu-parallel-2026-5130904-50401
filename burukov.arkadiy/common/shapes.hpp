@@ -6,15 +6,18 @@
 #include <utility>
 #include <vector>
 
-namespace burukov {
-  struct rectangle_t {
+namespace burukov
+{
+  struct rectangle_t
+  {
     double min_x;
     double min_y;
     double max_x;
     double max_y;
   };
 
-  struct shape_data_t {
+  struct shape_data_t
+  {
     int kind;
     double a;
     double b;
@@ -23,7 +26,8 @@ namespace burukov {
     double angle;
   };
 
-  class Shape {
+  class Shape
+  {
   public:
     virtual ~Shape() = default;
 
@@ -37,7 +41,8 @@ namespace burukov {
     virtual shape_data_t serialize() const noexcept = 0;
   };
 
-  class Circle: public Shape {
+  class Circle: public Shape
+  {
   public:
     Circle(double radius, double x, double y) noexcept;
 
@@ -56,7 +61,8 @@ namespace burukov {
     double y_;
   };
 
-  class Ellipse: public Shape {
+  class Ellipse: public Shape
+  {
   public:
     Ellipse(double a, double b, double x, double y, double angle = 0.0) noexcept;
 
