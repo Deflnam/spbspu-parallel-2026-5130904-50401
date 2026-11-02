@@ -46,15 +46,17 @@ namespace
   long long calcUnionHits(
       long long tries, long long seed, burukov::rectangle_t rect, const std::vector< burukov::shape_data_t > & shapes)
   {
-    long long count_in_any = 0;
-    std::default_random_engine engine(static_cast< unsigned int >(seed));
-    std::uniform_real_distribution< double > dist_x(rect.min_x, rect.max_x);
-    std::uniform_real_distribution< double > dist_y(rect.min_y, rect.max_y);
+    std::default_random_engine generator(static_cast< unsigned int >(seed));
+    const std::default_random_engine::result_type minimum = generator.min();
+    const double range = static_cast< double >(generator.max()) - static_cast< double >(minimum) + 1.0;
+    const double x_scale = (rect.max_x - rect.min_x) / range;
+    const double y_scale = (rect.max_y - rect.min_y) / range;
 
+    long long count_in_any = 0;
     for (long long i = 0; i < tries; ++i)
     {
-      const double x = dist_x(engine);
-      const double y = dist_y(engine);
+      const double x = rect.min_x + (static_cast< double >(generator()) - static_cast< double >(minimum)) * x_scale;
+      const double y = rect.min_y + (static_cast< double >(generator()) - static_cast< double >(minimum)) * y_scale;
       for (std::size_t j = 0; j < shapes.size(); ++j)
       {
         if (containsData(shapes[j], x, y))
