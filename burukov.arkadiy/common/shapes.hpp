@@ -94,8 +94,8 @@ namespace burukov
   std::pair< double, double > area(long long threads, long long tries, long long seed,
       const std::vector< std::unique_ptr< Shape > > & shapes, rectangle_t rect);
 
-  double calculateUnionArea(long long threads, long long tries, long long seed,
-      const std::vector< shape_data_t > & shapes);
+  double calculateUnionArea(long long threads, long long tries, long long seed, const std::vector< shape_data_t > 
+    & shapes);
 }
 
 #endif
