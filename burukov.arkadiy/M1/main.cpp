@@ -1,5 +1,3 @@
-#include "shapes.hpp"
-
 #include <iomanip>
 #include <iostream>
 #include <limits>
@@ -7,20 +5,22 @@
 #include <stdexcept>
 #include <vector>
 
-int main(int argc, char** argv)
-{
-  constexpr int min_args = 3;
-  constexpr int max_args = 4;
-  constexpr int threads_idx = 1;
-  constexpr int tries_idx = 2;
-  constexpr int seed_idx = 3;
-  constexpr int bad_exit = 1;
-  constexpr int good_exit = 0;
+#include <shapes.hpp>
 
-  if (argc < min_args || argc > max_args)
+int main(int argc, char ** argv)
+{
+  constexpr int MIN_ARGS = 3;
+  constexpr int MAX_ARGS = 4;
+  constexpr int THREADS_IDX = 1;
+  constexpr int TRIES_IDX = 2;
+  constexpr int SEED_IDX = 3;
+  constexpr int BAD_EXIT = 1;
+  constexpr int GOOD_EXIT = 0;
+
+  if (argc < MIN_ARGS || argc > MAX_ARGS)
   {
     std::cerr << "Usage: ./lab threads tries [seed]" << '\n';
-    return bad_exit;
+    return BAD_EXIT;
   }
 
   long long threads = 0;
@@ -29,28 +29,28 @@ int main(int argc, char** argv)
 
   try
   {
-    threads = burukov::parseArgument(argv[threads_idx], "threads");
-    tries = burukov::parseArgument(argv[tries_idx], "tries");
-    if (argc == max_args)
+    threads = burukov::parseArgument(argv[THREADS_IDX], "threads");
+    tries = burukov::parseArgument(argv[TRIES_IDX], "tries");
+    if (argc == MAX_ARGS)
     {
-      seed = burukov::parseArgument(argv[seed_idx], "seed");
+      seed = burukov::parseArgument(argv[SEED_IDX], "seed");
     }
   }
-  catch (const std::invalid_argument& e)
+  catch (const std::invalid_argument & e)
   {
     std::cerr << e.what() << '\n';
-    return bad_exit;
+    return BAD_EXIT;
   }
-  catch (const std::out_of_range& e)
+  catch (const std::out_of_range & e)
   {
     std::cerr << "Number is out of range: " << e.what() << '\n';
-    return bad_exit;
+    return BAD_EXIT;
   }
 
   if (threads < 0 || tries <= 0 || seed < 0)
   {
     std::cerr << "threads and seed must be non-negative, tries must be positive" << '\n';
-    return bad_exit;
+    return BAD_EXIT;
   }
 
   threads = (threads > 0) ? threads : 1;
@@ -67,13 +67,13 @@ int main(int argc, char** argv)
     if (!(std::cin >> second >> x >> y))
     {
       std::cerr << "Error: cannot parse figure parameters" << '\n';
-      return bad_exit;
+      return BAD_EXIT;
     }
 
     if (r <= 0.0)
     {
       std::cerr << "Radius must be positive" << '\n';
-      return bad_exit;
+      return BAD_EXIT;
     }
 
     if (second == 0.0)
@@ -90,7 +90,7 @@ int main(int argc, char** argv)
   if (shapes.empty())
   {
     std::cout << "0 0" << '\n';
-    return good_exit;
+    return GOOD_EXIT;
   }
 
   const burukov::rectangle_t rect = burukov::findRectangleRange(shapes);
@@ -104,10 +104,10 @@ int main(int argc, char** argv)
     std::cout << std::setprecision(std::numeric_limits< double >::max_digits10);
     std::cout << area_union << " " << area_intersect << '\n';
   }
-  catch (const std::invalid_argument& e)
+  catch (const std::invalid_argument & e)
   {
     std::cerr << e.what() << '\n';
-    return bad_exit;
+    return BAD_EXIT;
   }
-  return good_exit;
+  return GOOD_EXIT;
 }
