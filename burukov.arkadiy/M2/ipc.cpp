@@ -6,7 +6,7 @@
 
 #include <unistd.h>
 
-#include <shapes.hpp>
+#include "shapes.hpp"
 
 burukov::PipeEndpoint::PipeEndpoint() noexcept:
   fd_(-1)

@@ -30,11 +30,11 @@ namespace burukov
     PipeEndpoint() noexcept;
     explicit PipeEndpoint(int fd) noexcept;
     PipeEndpoint(const PipeEndpoint &) = delete;
-    PipeEndpoint(PipeEndpoint && other) noexcept;
+    PipeEndpoint(PipeEndpoint &&other) noexcept;
     ~PipeEndpoint() noexcept;
 
-    PipeEndpoint & operator=(const PipeEndpoint &) = delete;
-    PipeEndpoint & operator=(PipeEndpoint && other) noexcept;
+    PipeEndpoint &operator=(const PipeEndpoint &) = delete;
+    PipeEndpoint &operator=(PipeEndpoint &&other) noexcept;
 
     int get() const noexcept;
     void closeFd() noexcept;
@@ -43,11 +43,11 @@ namespace burukov
     int fd_;
   };
 
-  bool writeAll(int fd, const void * buffer, std::size_t count) noexcept;
-  bool readAll(int fd, void * buffer, std::size_t count) noexcept;
+  bool writeAll(int fd, const void *buffer, std::size_t count) noexcept;
+  bool readAll(int fd, void *buffer, std::size_t count) noexcept;
 
   bool sendTask(int fd, std::size_t calc_id, long long threads, long long tries,
-      const std::vector< shape_data_t > & shapes) noexcept;
+      const std::vector< shape_data_t > &shapes) noexcept;
   bool sendStopSignal(int fd) noexcept;
 }
 

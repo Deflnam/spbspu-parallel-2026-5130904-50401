@@ -16,14 +16,14 @@
 #include <sys/wait.h>
 #include <unistd.h>
 
-#include <shapes.hpp>
+#include "shapes.hpp"
 
 #include "ipc.hpp"
 #include "worker.hpp"
 
 namespace
 {
-  std::vector< std::string > splitTokens(const std::string & line)
+  std::vector< std::string > splitTokens(const std::string &line)
   {
     std::vector< std::string > tokens;
     std::size_t i = 0;
@@ -48,7 +48,7 @@ namespace
     return tokens;
   }
 
-  bool isValidIdentifier(const std::string & name) noexcept
+  bool isValidIdentifier(const std::string &name) noexcept
   {
     if (name.empty())
     {
@@ -60,7 +60,7 @@ namespace
     return is_upper || is_lower;
   }
 
-  bool parseLongLong(const std::string & str, long long & out) noexcept
+  bool parseLongLong(const std::string &str, long long &out) noexcept
   {
     if (str.empty())
     {
@@ -83,7 +83,7 @@ namespace
     }
   }
 
-  bool parseDouble(const std::string & str, double & out) noexcept
+  bool parseDouble(const std::string &str, double &out) noexcept
   {
     if (str.empty())
     {
@@ -127,7 +127,7 @@ void burukov::CommandProcessor::shutdownAll() noexcept
 {
   for (auto it = processes_.begin(); it != processes_.end(); ++it)
   {
-    worker_process_t & proc = it->second;
+    worker_process_t &proc = it->second;
     if (proc.to_child.get() >= 0)
     {
       sendStopSignal(proc.to_child.get());
@@ -143,7 +143,7 @@ void burukov::CommandProcessor::shutdownAll() noexcept
   }
 }
 
-void burukov::CommandProcessor::dispatchNextTask(worker_process_t & proc) noexcept
+void burukov::CommandProcessor::dispatchNextTask(worker_process_t &proc) noexcept
 {
   if (proc.busy || proc.killed || proc.queue.empty() || proc.to_child.get() < 0)
   {
@@ -164,11 +164,11 @@ void burukov::CommandProcessor::dispatchNextTask(worker_process_t & proc) noexce
   }
 }
 
-void burukov::CommandProcessor::consumeResult(worker_process_t & proc, const task_result_t & res) noexcept
+void burukov::CommandProcessor::consumeResult(worker_process_t &proc, const task_result_t &res) noexcept
 {
   if (res.calc_id < calcs_.size())
   {
-    calc_record_t & rec = calcs_[res.calc_id];
+    calc_record_t &rec = calcs_[res.calc_id];
     rec.duration_ms = res.duration_ms;
     rec.area = res.area;
     rec.state = calc_state_t::completed;
@@ -196,7 +196,7 @@ void burukov::CommandProcessor::pollWorkers() noexcept
 {
   for (auto it = processes_.begin(); it != processes_.end(); ++it)
   {
-    worker_process_t & proc = it->second;
+    worker_process_t &proc = it->second;
     while (proc.busy && proc.from_child.get() >= 0)
     {
       pollfd pfd = {proc.from_child.get(), POLLIN, 0};
@@ -231,13 +231,13 @@ bool burukov::CommandProcessor::waitForCalculation(std::size_t calc_id, long lon
     return true;
   }
 
-  const std::string & proc_name = calcs_[calc_id].process_name;
+  const std::string &proc_name = calcs_[calc_id].process_name;
   auto proc_it = processes_.find(proc_name);
   if (proc_it == processes_.end())
   {
     return false;
   }
-  worker_process_t & proc = proc_it->second;
+  worker_process_t &proc = proc_it->second;
 
   const auto start = std::chrono::steady_clock::now();
 
@@ -283,7 +283,7 @@ bool burukov::CommandProcessor::waitForCalculation(std::size_t calc_id, long lon
   return calcs_[calc_id].state != calc_state_t::in_progress;
 }
 
-void burukov::CommandProcessor::printCalcStatus(const calc_record_t & rec) const
+void burukov::CommandProcessor::printCalcStatus(const calc_record_t &rec) const
 {
   if (rec.state == calc_state_t::in_progress)
   {
@@ -304,14 +304,14 @@ void burukov::CommandProcessor::printCalcStatus(const calc_record_t & rec) const
   }
 }
 
-bool burukov::CommandProcessor::handleCircle(const std::vector< std::string > & tokens)
+bool burukov::CommandProcessor::handleCircle(const std::vector< std::string > &tokens)
 {
   constexpr std::size_t EXPECTED_TOKENS = 5;
   if (tokens.size() != EXPECTED_TOKENS)
   {
     return false;
   }
-  const std::string & name = tokens[1];
+  const std::string &name = tokens[1];
   long long r = 0;
   long long x = 0;
   long long y = 0;
@@ -328,7 +328,7 @@ bool burukov::CommandProcessor::handleCircle(const std::vector< std::string > & 
   return true;
 }
 
-bool burukov::CommandProcessor::handleEllipse(const std::vector< std::string > & tokens)
+bool burukov::CommandProcessor::handleEllipse(const std::vector< std::string > &tokens)
 {
   constexpr std::size_t EXPECTED_TOKENS = 6;
   constexpr std::size_t IDX_Y = 5;
@@ -336,7 +336,7 @@ bool burukov::CommandProcessor::handleEllipse(const std::vector< std::string > &
   {
     return false;
   }
-  const std::string & name = tokens[1];
+  const std::string &name = tokens[1];
   long long rx = 0;
   long long ry = 0;
   long long x = 0;
@@ -350,12 +350,12 @@ bool burukov::CommandProcessor::handleEllipse(const std::vector< std::string > &
   {
     return false;
   }
-  shapes_[name] = std::make_unique< Ellipse >(static_cast< double >(rx), static_cast< double >(ry),
-      static_cast< double >(x), static_cast< double >(y));
+  shapes_[name] = std::make_unique< Ellipse >(
+      static_cast< double >(rx), static_cast< double >(ry), static_cast< double >(x), static_cast< double >(y));
   return true;
 }
 
-bool burukov::CommandProcessor::handleRotate(const std::vector< std::string > & tokens)
+bool burukov::CommandProcessor::handleRotate(const std::vector< std::string > &tokens)
 {
   if (tokens.size() != 3)
   {
@@ -371,13 +371,13 @@ bool burukov::CommandProcessor::handleRotate(const std::vector< std::string > & 
   return true;
 }
 
-bool burukov::CommandProcessor::handleSet(const std::vector< std::string > & tokens)
+bool burukov::CommandProcessor::handleSet(const std::vector< std::string > &tokens)
 {
   if (tokens.size() < 4)
   {
     return false;
   }
-  const std::string & set_name = tokens[1];
+  const std::string &set_name = tokens[1];
   long long set_size = 0;
   if (!isValidIdentifier(set_name) || sets_.find(set_name) != sets_.end() || !parseLongLong(tokens[2], set_size)
       || set_size <= 0)
@@ -403,7 +403,7 @@ bool burukov::CommandProcessor::handleSet(const std::vector< std::string > & tok
   return true;
 }
 
-bool burukov::CommandProcessor::handleShow(const std::vector< std::string > & tokens) const
+bool burukov::CommandProcessor::handleShow(const std::vector< std::string > &tokens) const
 {
   if (tokens.size() != 2)
   {
@@ -418,7 +418,7 @@ bool burukov::CommandProcessor::handleShow(const std::vector< std::string > & to
   return true;
 }
 
-bool burukov::CommandProcessor::handleShowSet(const std::vector< std::string > & tokens) const
+bool burukov::CommandProcessor::handleShowSet(const std::vector< std::string > &tokens) const
 {
   if (tokens.size() != 2)
   {
@@ -429,7 +429,7 @@ bool burukov::CommandProcessor::handleShowSet(const std::vector< std::string > &
   {
     return false;
   }
-  const std::vector< std::string > & members = it->second;
+  const std::vector< std::string > &members = it->second;
   for (std::size_t i = 0; i < members.size(); ++i)
   {
     auto shape_it = shapes_.find(members[i]);
@@ -441,7 +441,7 @@ bool burukov::CommandProcessor::handleShowSet(const std::vector< std::string > &
   return true;
 }
 
-bool burukov::CommandProcessor::handleFrame(const std::vector< std::string > & tokens) const
+bool burukov::CommandProcessor::handleFrame(const std::vector< std::string > &tokens) const
 {
   if (tokens.size() != 2)
   {
@@ -452,13 +452,12 @@ bool burukov::CommandProcessor::handleFrame(const std::vector< std::string > & t
   {
     return false;
   }
-  const rectangle_t rect
-      = {it->second->getMinX(), it->second->getMinY(), it->second->getMaxX(), it->second->getMaxY()};
+  const rectangle_t rect = {it->second->getMinX(), it->second->getMinY(), it->second->getMaxX(), it->second->getMaxY()};
   printFrameRect(rect);
   return true;
 }
 
-bool burukov::CommandProcessor::handleFrameSet(const std::vector< std::string > & tokens) const
+bool burukov::CommandProcessor::handleFrameSet(const std::vector< std::string > &tokens) const
 {
   if (tokens.size() != 2)
   {
@@ -469,7 +468,7 @@ bool burukov::CommandProcessor::handleFrameSet(const std::vector< std::string > 
   {
     return false;
   }
-  const std::vector< std::string > & members = it->second;
+  const std::vector< std::string > &members = it->second;
   std::vector< shape_data_t > serialized;
   serialized.reserve(members.size());
   for (std::size_t i = 0; i < members.size(); ++i)
@@ -485,16 +484,16 @@ bool burukov::CommandProcessor::handleFrameSet(const std::vector< std::string > 
   return true;
 }
 
-bool burukov::CommandProcessor::handleSpawn(const std::vector< std::string > & tokens, int & child_exit_flag)
+bool burukov::CommandProcessor::handleSpawn(const std::vector< std::string > &tokens, int &child_exit_flag)
 {
   if (tokens.size() != 3)
   {
     return false;
   }
-  const std::string & proc_name = tokens[1];
+  const std::string &proc_name = tokens[1];
   long long seed = 0;
-  if (!isValidIdentifier(proc_name) || processes_.find(proc_name) != processes_.end()
-      || !parseLongLong(tokens[2], seed) || seed < 0)
+  if (!isValidIdentifier(proc_name) || processes_.find(proc_name) != processes_.end() || !parseLongLong(tokens[2], seed)
+      || seed < 0)
   {
     return false;
   }
@@ -550,7 +549,7 @@ bool burukov::CommandProcessor::handleSpawn(const std::vector< std::string > & t
   return true;
 }
 
-bool burukov::CommandProcessor::handleAreaOn(const std::vector< std::string > & tokens)
+bool burukov::CommandProcessor::handleAreaOn(const std::vector< std::string > &tokens)
 {
   constexpr std::size_t EXPECTED_TOKENS = 6;
   constexpr std::size_t IDX_TRIES = 5;
@@ -558,9 +557,9 @@ bool burukov::CommandProcessor::handleAreaOn(const std::vector< std::string > & 
   {
     return false;
   }
-  const std::string & proc_name = tokens[1];
-  const std::string & calc_name = tokens[2];
-  const std::string & set_name = tokens[3];
+  const std::string &proc_name = tokens[1];
+  const std::string &calc_name = tokens[2];
+  const std::string &set_name = tokens[3];
   long long threads = 0;
   long long tries = 0;
 
@@ -584,7 +583,7 @@ bool burukov::CommandProcessor::handleAreaOn(const std::vector< std::string > & 
   }
 
   std::vector< shape_data_t > snapshot;
-  const std::vector< std::string > & member_names = set_it->second;
+  const std::vector< std::string > &member_names = set_it->second;
   snapshot.reserve(member_names.size());
   for (std::size_t i = 0; i < member_names.size(); ++i)
   {
@@ -604,7 +603,7 @@ bool burukov::CommandProcessor::handleAreaOn(const std::vector< std::string > & 
   return true;
 }
 
-bool burukov::CommandProcessor::handleStatus(const std::vector< std::string > & tokens)
+bool burukov::CommandProcessor::handleStatus(const std::vector< std::string > &tokens)
 {
   if (tokens.size() != 2)
   {
@@ -620,7 +619,7 @@ bool burukov::CommandProcessor::handleStatus(const std::vector< std::string > & 
   return true;
 }
 
-bool burukov::CommandProcessor::handleWait(const std::vector< std::string > & tokens)
+bool burukov::CommandProcessor::handleWait(const std::vector< std::string > &tokens)
 {
   if (tokens.size() != 2)
   {
@@ -636,7 +635,7 @@ bool burukov::CommandProcessor::handleWait(const std::vector< std::string > & to
   return true;
 }
 
-bool burukov::CommandProcessor::handleTimeout(const std::vector< std::string > & tokens)
+bool burukov::CommandProcessor::handleTimeout(const std::vector< std::string > &tokens)
 {
   if (tokens.size() != 3)
   {
@@ -653,7 +652,7 @@ bool burukov::CommandProcessor::handleTimeout(const std::vector< std::string > &
   return true;
 }
 
-bool burukov::CommandProcessor::handleKill(const std::vector< std::string > & tokens)
+bool burukov::CommandProcessor::handleKill(const std::vector< std::string > &tokens)
 {
   if (tokens.size() != 2)
   {
@@ -666,7 +665,7 @@ bool burukov::CommandProcessor::handleKill(const std::vector< std::string > & to
     return false;
   }
 
-  worker_process_t & proc = it->second;
+  worker_process_t &proc = it->second;
   proc.killed = true;
 
   while (!proc.queue.empty())
@@ -699,7 +698,7 @@ bool burukov::CommandProcessor::handleKill(const std::vector< std::string > & to
   return true;
 }
 
-bool burukov::CommandProcessor::processLine(const std::string & line, int & child_exit_flag)
+bool burukov::CommandProcessor::processLine(const std::string &line, int &child_exit_flag)
 {
   const std::vector< std::string > tokens = splitTokens(line);
   if (tokens.empty())
@@ -707,7 +706,7 @@ bool burukov::CommandProcessor::processLine(const std::string & line, int & chil
     return true;
   }
 
-  const std::string & cmd = tokens[0];
+  const std::string &cmd = tokens[0];
   bool valid_args = false;
 
   if (cmd == "circle")

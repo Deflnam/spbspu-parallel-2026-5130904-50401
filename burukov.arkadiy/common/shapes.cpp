@@ -1,4 +1,4 @@
-#include <shapes.hpp>
+#include "shapes.hpp"
 
 #include <algorithm>
 #include <cmath>
@@ -43,8 +43,8 @@ namespace
     return {shape.x - half_w, shape.y - half_h, shape.x + half_w, shape.y + half_h};
   }
 
-  long long calcUnionHits(long long tries, long long seed, burukov::rectangle_t rect,
-      const std::vector< burukov::shape_data_t > & shapes)
+  long long calcUnionHits(
+      long long tries, long long seed, burukov::rectangle_t rect, const std::vector< burukov::shape_data_t > & shapes)
   {
     long long count_in_any = 0;
     std::default_random_engine engine(static_cast< unsigned int >(seed));
@@ -324,8 +324,8 @@ std::pair< double, double > burukov::area(long long threads, long long tries, lo
   return std::make_pair(area_union, area_intersect);
 }
 
-double burukov::calculateUnionArea(long long threads, long long tries, long long seed,
-    const std::vector< shape_data_t > & shapes)
+double burukov::calculateUnionArea(
+    long long threads, long long tries, long long seed, const std::vector< shape_data_t > & shapes)
 {
   if (shapes.empty())
   {

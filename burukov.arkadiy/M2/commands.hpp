@@ -10,7 +10,7 @@
 
 #include <sys/types.h>
 
-#include <shapes.hpp>
+#include "shapes.hpp"
 
 #include "ipc.hpp"
 
@@ -60,10 +60,10 @@ namespace burukov
     CommandProcessor(CommandProcessor &&) = delete;
     ~CommandProcessor() noexcept;
 
-    CommandProcessor & operator=(const CommandProcessor &) = delete;
-    CommandProcessor & operator=(CommandProcessor &&) = delete;
+    CommandProcessor &operator=(const CommandProcessor &) = delete;
+    CommandProcessor &operator=(CommandProcessor &&) = delete;
 
-    bool processLine(const std::string & line, int & child_exit_flag);
+    bool processLine(const std::string &line, int &child_exit_flag);
     void shutdownAll() noexcept;
 
   private:
@@ -75,24 +75,24 @@ namespace burukov
 
     void pollWorkers() noexcept;
     bool waitForCalculation(std::size_t calc_id, long long timeout_ms) noexcept;
-    void dispatchNextTask(worker_process_t & proc) noexcept;
-    void consumeResult(worker_process_t & proc, const task_result_t & res) noexcept;
-    void printCalcStatus(const calc_record_t & rec) const;
+    void dispatchNextTask(worker_process_t &proc) noexcept;
+    void consumeResult(worker_process_t &proc, const task_result_t &res) noexcept;
+    void printCalcStatus(const calc_record_t &rec) const;
 
-    bool handleCircle(const std::vector< std::string > & tokens);
-    bool handleEllipse(const std::vector< std::string > & tokens);
-    bool handleRotate(const std::vector< std::string > & tokens);
-    bool handleSet(const std::vector< std::string > & tokens);
-    bool handleShow(const std::vector< std::string > & tokens) const;
-    bool handleShowSet(const std::vector< std::string > & tokens) const;
-    bool handleFrame(const std::vector< std::string > & tokens) const;
-    bool handleFrameSet(const std::vector< std::string > & tokens) const;
-    bool handleSpawn(const std::vector< std::string > & tokens, int & child_exit_flag);
-    bool handleAreaOn(const std::vector< std::string > & tokens);
-    bool handleStatus(const std::vector< std::string > & tokens);
-    bool handleWait(const std::vector< std::string > & tokens);
-    bool handleTimeout(const std::vector< std::string > & tokens);
-    bool handleKill(const std::vector< std::string > & tokens);
+    bool handleCircle(const std::vector< std::string > &tokens);
+    bool handleEllipse(const std::vector< std::string > &tokens);
+    bool handleRotate(const std::vector< std::string > &tokens);
+    bool handleSet(const std::vector< std::string > &tokens);
+    bool handleShow(const std::vector< std::string > &tokens) const;
+    bool handleShowSet(const std::vector< std::string > &tokens) const;
+    bool handleFrame(const std::vector< std::string > &tokens) const;
+    bool handleFrameSet(const std::vector< std::string > &tokens) const;
+    bool handleSpawn(const std::vector< std::string > &tokens, int &child_exit_flag);
+    bool handleAreaOn(const std::vector< std::string > &tokens);
+    bool handleStatus(const std::vector< std::string > &tokens);
+    bool handleWait(const std::vector< std::string > &tokens);
+    bool handleTimeout(const std::vector< std::string > &tokens);
+    bool handleKill(const std::vector< std::string > &tokens);
   };
 }
 
